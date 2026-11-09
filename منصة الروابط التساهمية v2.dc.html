@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F2EC}
+*{box-sizing:border-box}
+button{font-family:inherit}
+a{color:#2346D8}
+a:hover{color:#14171C}
+input[type=range]{accent-color:#2346D8}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;background-color:#F3F2EC;background-image:linear-gradient(#E7E5DD 1px, transparent 1px),linear-gradient(90deg, #E7E5DD 1px, transparent 1px);background-size:28px 28px;font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:#14171C;line-height:1.7">
+
+  <header style="position:sticky;top:0;z-index:40;background:rgba(243,242,236,0.94);backdrop-filter:blur(8px);border-bottom:1px solid #DAD8CF">
+    <div style="max-width:1080px;margin:0 auto;padding:10px clamp(14px,4vw,28px);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:12px;background:none;border:0;padding:0;cursor:pointer;color:#14171C;text-align:right">
+        <div style="width:42px;height:42px;border:1.5px solid #14171C;border-radius:6px;display:flex;flex-direction:column;justify-content:space-between;padding:3px 5px;background:#fff">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;line-height:1;align-self:flex-end">4</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;line-height:1;direction:ltr;align-self:center">σπ</span>
+        </div>
+        <div style="display:flex;flex-direction:column;line-height:1.3">
+          <span style="font-weight:700;font-size:16px">الروابط التساهمية</span>
+          <span style="font-size:12px;color:#5B6270">تعلّمي الهدف ثم اختبري نفسك</span>
+        </div>
+      </button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid #DAD8CF;border-radius:18px;background:#fff;font-size:13px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ points }}</span>
+          <span style="color:#5B6270">نقطة</span>
+        </div>
+        <button onClick="{{ openBadges }}" style="display:flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid #DAD8CF;border-radius:18px;background:#fff;font-size:13px;cursor:pointer;color:#14171C" style-hover="border-color:#14171C">
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:600">{{ badgeCount }}</span>
+          <span style="color:#5B6270">شارات</span>
+        </button>
+        <button onClick="{{ startFinal }}" style="height:36px;padding:0 14px;border:0;border-radius:18px;background:#14171C;color:#fff;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:#2346D8">الاختبار الشامل</button>
+      </div>
+    </div>
+  </header>
+
+  <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1080px;margin:0 auto;padding:80px 24px;color:#5B6270">جارٍ تحميل المحتوى…</div>
+  </sc-if>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <main style="max-width:1080px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(14px,4vw,28px) 80px;display:flex;flex-direction:column;gap:28px">
+      <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:end">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2346D8;letter-spacing:0.04em">كيمياء · المرحلة الثانوية · الأقسام 4-1 إلى 4-5</span>
+          <h1 style="margin:0;font-size:clamp(32px,6vw,52px);line-height:1.15;font-weight:700">الروابط التساهمية</h1>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:#14171C">
+            <span style="font-weight:700">الثانوية العشرون بالدمام</span>
+            <span><span style="color:#5B6270">معلمة المقرر: </span>أ. مشاعل القحطاني</span>
+            <span><span style="color:#5B6270">مديرة المدرسة: </span>أ. منيرة العصيمي</span>
+          </div>
+          <p style="margin:0;font-size:16px;color:#5B6270;max-width:54ch;text-wrap:pretty">15 هدفًا في 5 أقسام. في كل هدف: أتعلّم، ثم أستكشف بنشاط تفاعلي، ثم أطبّق على مثال محلول خطوة بخطوة، وأخيرًا اختبري نفسك.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #DAD8CF;border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+            <span style="font-size:14px;color:#5B6270">إتقانكِ الكلي</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:34px;font-weight:600;line-height:1">{{ overallLabel }}</span>
+          </div>
+          <div style="height:8px;background:#ECEAE3;border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:{{ overallW }};background:#2346D8;border-radius:4px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:#5B6270;gap:10px;flex-wrap:wrap">
+            <span>أهداف متقنة: <b style="color:#14171C;font-family:'IBM Plex Mono',monospace">{{ masteredLabel }}</b></span>
+            <span>نسبة الإتقان المطلوبة: <b style="color:#14171C;font-family:'IBM Plex Mono',monospace">{{ passLabel }}</b></span>
+          </div>
+        </div>
+      </section>
+
+      <sc-for list="{{ secs }}" as="sec" hint-placeholder-count="5">
+        <section style="background:#fff;border:1px solid #DAD8CF;border-radius:12px;overflow:hidden">
+          <div style="display:flex;gap:16px;align-items:flex-start;padding:20px clamp(16px,3vw,24px);border-bottom:1px solid #ECEAE3;flex-wrap:wrap">
+            <div style="width:64px;height:64px;flex:none;border:1.5px solid #14171C;border-radius:8px;display:flex;flex-direction:column;justify-content:space-between;padding:5px 7px;background:#F3F2EC">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1;color:#5B6270;align-self:flex-end">{{ sec.count }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;line-height:1;direction:ltr;align-self:center">{{ sec.id }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;line-height:1;color:#5B6270;align-self:center">{{ sec.pctLabel }}</span>
+            </div>
+            <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">
+                <h2 style="margin:0;font-size:22px;font-weight:700">{{ sec.title }}</h2>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5B6270;direction:ltr">{{ sec.en }}</span>
+              </div>
+              <p style="margin:0;font-size:14px;color:#5B6270;text-wrap:pretty"><b style="color:#2346D8;font-weight:600">الفكرة الرئيسة: </b>{{ sec.idea }}</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ sec.objs }}" as="ob" hint-placeholder-count="3">
+              <button onClick="{{ ob.open }}" style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px clamp(16px,3vw,24px);background:#fff;border:0;border-top:1px solid #F0EEE8;text-align:right;cursor:pointer;color:#14171C" style-hover="background:#F7F7F3">
+                <span style="width:30px;height:30px;border-radius:50%;border:1px solid #DAD8CF;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600">{{ ob.n }}</span>
+                <span style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <span style="font-size:15px;font-weight:500;text-wrap:pretty">{{ ob.text }}</span>
+                  <span style="display:flex;align-items:center;gap:10px">
+                    <span style="flex:1;max-width:260px;height:5px;background:#ECEAE3;border-radius:3px;overflow:hidden"><span style="display:block;height:100%;width:{{ ob.pctW }};background:{{ ob.barColor }}"></span></span>
+                    <span style="font-size:12px;color:{{ ob.statusColor }};font-weight:600">{{ ob.status }}</span>
+                  </span>
+                </span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;min-width:44px;text-align:left">{{ ob.pctLabel }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+
+      <section style="background:#14171C;color:#fff;border-radius:12px;padding:clamp(20px,4vw,32px);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:6px;max-width:56ch">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9DB0F5">Σ · بعد إنهاء الأهداف</span>
+          <h2 style="margin:0;font-size:24px;font-weight:700">الاختبار الشامل</h2>
+          <p style="margin:0;font-size:14px;color:#C9CDD6">{{ finalDesc }}</p>
+        </div>
+        <button onClick="{{ startFinal }}" style="height:48px;padding:0 26px;border:0;border-radius:24px;background:#fff;color:#14171C;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#E6EBFC">ابدئي الاختبار</button>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isLearn }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:920px;margin:0 auto;padding:24px clamp(14px,4vw,28px) 80px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#5B6270;flex-wrap:wrap">
+        <button onClick="{{ goHome }}" style="background:none;border:0;padding:0;color:#2346D8;cursor:pointer;font-size:13px;font-weight:600">→ خريطة الأهداف</button>
+        <span>/</span>
+        <span style="font-family:'IBM Plex Mono',monospace;direction:ltr">{{ cur.secId }}</span>
+        <span>{{ cur.secTitle }}</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:12px;font-weight:600;padding:3px 10px;border:1px solid #14171C;border-radius:4px;background:#fff;white-space:nowrap">{{ cur.posLabel }}</span>
+          <span style="font-size:12px;padding:3px 10px;border-radius:4px;background:{{ cur.chipBg }};color:{{ cur.chipColor }};font-weight:600">{{ cur.masteryLabel }}</span>
+        </div>
+        <h1 style="margin:0;font-size:clamp(24px,4.4vw,34px);line-height:1.35;font-weight:700;text-wrap:pretty">{{ cur.text }}</h1>
+      </div>
+
+      <nav style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;border-bottom:1px solid #DAD8CF">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+          <button onClick="{{ tb.go }}" style="flex:none;height:46px;padding:0 14px;background:none;border:0;border-bottom:2px solid {{ tb.bd }};margin-bottom:-1px;color:{{ tb.color }};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:8px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;width:20px;height:20px;border-radius:50%;border:1px solid {{ tb.color }};display:flex;align-items:center;justify-content:center">{{ tb.n }}</span>
+            <span>{{ tb.label }}</span>
+          </button>
+        </sc-for>
+      </nav>
+
+      <sc-if value="{{ tabLearn }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ cur.blocks }}" as="b" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #DAD8CF;border-radius:12px;padding:clamp(16px,3.5vw,24px);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2346D8">{{ b.idx }}</span>
+                <span style="font-size:12px;font-weight:600;color:#5B6270">{{ b.kind }}</span>
+              </div>
+
+              <sc-if value="{{ b.isDef }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),auto));gap:8px 18px;align-items:baseline">
+                  <span style="font-size:20px;font-weight:700;color:#14171C">{{ b.term }}</span>
+                  <span style="font-size:17px;text-wrap:pretty">{{ b.text }}</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.isFlow }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:17px;font-weight:700">{{ b.title }}</span>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px">
+                  <sc-for list="{{ b.steps }}" as="fs" hint-placeholder-count="4">
+                    <div style="border:1.5px solid {{ fs.bd }};background:{{ fs.bg }};color:{{ fs.c }};border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;opacity:0.75">{{ fs.n }}</span>
+                      <span style="font-size:15px;font-weight:600;line-height:1.55;text-wrap:pretty">{{ fs.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:17px;font-weight:700">{{ b.title }}</span>
+                <div style="overflow-x:auto">
+                  <div style="display:grid;grid-template-columns:{{ b.cols }};min-width:{{ b.minW }};border:1px solid #DAD8CF;border-radius:8px;overflow:hidden">
+                    <sc-for list="{{ b.head }}" as="h" hint-placeholder-count="3">
+                      <div style="padding:10px 12px;background:#14171C;color:#fff;font-size:13px;font-weight:600">{{ h.v }}</div>
+                    </sc-for>
+                    <sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="9">
+                      <div style="padding:10px 12px;border-top:1px solid #ECEAE3;font-size:15px;background:{{ c.bg }};font-weight:{{ c.w }};text-align:right"><span style="direction:{{ c.dir }};unicode-bidi:isolate;display:inline-block">{{ c.v }}</span></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.isCompare }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+                  <div style="border-radius:10px;background:#E6EBFC;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+                    <span style="font-size:16px;font-weight:700;color:#2346D8">{{ b.aTitle }}</span>
+                    <sc-for list="{{ b.aItems }}" as="ai" hint-placeholder-count="2">
+                      <span style="font-size:15px;display:flex;gap:8px"><span style="color:#2346D8">●</span><span style="text-wrap:pretty">{{ ai.v }}</span></span>
+                    </sc-for>
+                  </div>
+                  <div style="border-radius:10px;background:#F6E9D8;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+                    <span style="font-size:16px;font-weight:700;color:#8A4F0E">{{ b.bTitle }}</span>
+                    <sc-for list="{{ b.bItems }}" as="bi" hint-placeholder-count="2">
+                      <span style="font-size:15px;display:flex;gap:8px"><span style="color:#D9821E">●</span><span style="text-wrap:pretty">{{ bi.v }}</span></span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.isNote }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:16px;font-weight:500;text-wrap:pretty">{{ b.text }}</p>
+              </sc-if>
+
+              <sc-if value="{{ b.isChips }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:16px;font-weight:700">{{ b.title }}</span>
+                <div style="display:flex;flex-wrap:wrap;gap:10px">
+                  <sc-for list="{{ b.items }}" as="ch" hint-placeholder-count="4">
+                    <div style="min-width:72px;padding:10px 14px;border:1.5px solid #14171C;border-radius:8px;background:#F7F7F3;display:flex;flex-direction:column;align-items:center;gap:2px">
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;direction:ltr">{{ ch.f }}</span>
+                      <span style="font-size:12px;color:#5B6270">{{ ch.cap }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.isPoints }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:16px;font-weight:700">{{ b.title }}</span>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ b.items }}" as="pt" hint-placeholder-count="2">
+                    <span style="font-size:15px;display:flex;gap:10px"><span style="color:#2346D8">●</span><span style="text-wrap:pretty">{{ pt.v }}</span></span>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabExplore }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #DAD8CF;border-radius:12px;padding:clamp(16px,3.5vw,26px);display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:20px;font-weight:700">{{ ex.title }}</span>
+            <span style="font-size:15px;color:#5B6270;text-wrap:pretty">{{ ex.prompt }}</span>
+          </div>
+          <sc-for list="{{ ex.groups }}" as="g" hint-placeholder-count="1">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12px;font-weight:600;color:#5B6270">{{ g.label }}</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ g.opts }}" as="go" hint-placeholder-count="3">
+                  <button onClick="{{ go.go }}" style="min-height:38px;padding:0 14px;border-radius:19px;border:1.5px solid {{ go.bd }};background:{{ go.bg }};color:{{ go.c }};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'IBM Plex Sans Arabic',sans-serif">{{ go.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+
+          <div onPointerDown="{{ ex.pDown }}" onPointerMove="{{ ex.pMove }}" onPointerUp="{{ ex.pUp }}" onPointerCancel="{{ ex.pUp }}" style="position:relative;width:100%;aspect-ratio:8/5;container-type:inline-size;border:1px solid #DAD8CF;border-radius:10px;overflow:hidden;background-color:#F7F7F3;background-image:radial-gradient(#DAD8CF 1px, transparent 1px);background-size:20px 20px;touch-action:{{ ex.touch }};cursor:{{ ex.cursor }};user-select:none">
+            <sc-for list="{{ ex.items }}" as="it" hint-placeholder-count="0">
+              <div onClick="{{ it.click }}" style="position:absolute;left:{{ it.l }};top:{{ it.tp }};width:{{ it.w }};height:{{ it.h }};transform:translate(-50%,-50%) rotate({{ it.rot }});background:{{ it.bg }};border:{{ it.bd }};border-radius:{{ it.r }};opacity:{{ it.op }};z-index:{{ it.z }};color:{{ it.c }};font-size:{{ it.fs }};font-weight:{{ it.fw }};cursor:{{ it.cur }};display:flex;align-items:center;justify-content:center;transition:{{ it.tr }};font-family:'IBM Plex Mono','IBM Plex Sans Arabic',monospace;white-space:nowrap;line-height:1;direction:{{ it.dir }}">{{ it.t }}</div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ ex.hasLegend }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:14px">
+              <sc-for list="{{ ex.legend }}" as="lg" hint-placeholder-count="2">
+                <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:#5B6270"><span style="width:12px;height:12px;border-radius:50%;background:{{ lg.c }}"></span>{{ lg.t }}</span>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ex.hasSlider }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;font-size:14px">
+                <span style="font-weight:600">{{ ex.slider.label }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;color:#2346D8;unicode-bidi:plaintext">{{ ex.slider.valueLabel }}</span>
+              </div>
+              <input type="range" min="{{ ex.slider.min }}" max="{{ ex.slider.max }}" step="{{ ex.slider.step }}" value="{{ ex.slider.value }}" onChange="{{ ex.slider.change }}" style="width:100%;height:32px;direction:ltr">
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ex.hasQuestion }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border:1.5px solid #14171C;border-radius:10px">
+              <span style="font-size:16px;font-weight:700;text-wrap:pretty">{{ ex.question.ask }}</span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ ex.question.opts }}" as="qo" hint-placeholder-count="2">
+                  <button onClick="{{ qo.go }}" style="min-height:44px;padding:0 16px;border-radius:22px;border:1.5px solid #DAD8CF;background:#fff;color:#14171C;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap" style-hover="border-color:#14171C">{{ qo.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ex.hasActions }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ ex.actions }}" as="ac" hint-placeholder-count="2">
+                <button onClick="{{ ac.go }}" style="min-height:44px;padding:0 18px;border-radius:22px;border:1.5px solid {{ ac.bd }};background:{{ ac.bg }};color:{{ ac.c }};font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap">{{ ac.label }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px">
+            <sc-for list="{{ ex.readouts }}" as="ro" hint-placeholder-count="3">
+              <div style="border:1px solid #ECEAE3;border-radius:8px;padding:10px 12px;background:#FAFAF7;display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:12px;color:#5B6270">{{ ro.k }}</span>
+                <span style="font-size:16px;font-weight:700;color:{{ ro.c }};direction:{{ ro.dir }};unicode-bidi:isolate;align-self:flex-start">{{ ro.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="border-radius:10px;padding:12px 16px;background:{{ ex.insBg }};color:{{ ex.insC }};font-size:15px;font-weight:500;text-wrap:pretty">{{ ex.insText }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ tabApply }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:#14171C;color:#fff;border-radius:12px;padding:clamp(16px,3.5vw,24px);display:flex;flex-direction:column;gap:6px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9DB0F5">{{ ap.src }}</span>
+            <p style="margin:0;font-size:clamp(18px,3.2vw,22px);font-weight:700;line-height:1.55;text-wrap:pretty">{{ ap.q }}</p>
+            <span style="font-size:13px;color:#C9CDD6">حلّي كل خطوة بنفسك أولًا، ثم تحققي أو اكشفي الخطوة.</span>
+          </div>
+          <sc-for list="{{ ap.steps }}" as="sp" hint-placeholder-count="3">
+            <div style="background:#fff;border:1.5px solid {{ sp.bd }};border-radius:12px;padding:clamp(14px,3vw,20px);display:flex;flex-direction:column;gap:12px;opacity:{{ sp.op }}">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;background:{{ sp.nBg }};color:{{ sp.nC }}">{{ sp.mark }}</span>
+                <span style="flex:1;font-size:13px;font-weight:600;color:#5B6270">{{ sp.label }}</span>
+              </div>
+              <sc-if value="{{ sp.open }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:17px;font-weight:600;text-wrap:pretty">{{ sp.ask }}</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ sp.opts }}" as="so" hint-placeholder-count="3">
+                    <button onClick="{{ so.go }}" style="min-height:44px;padding:0 16px;border-radius:10px;border:1.5px solid {{ so.bd }};background:{{ so.bg }};color:#14171C;opacity:{{ so.op }};font-size:15px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif">{{ so.label }}</button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ sp.showWrong }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:14px;color:#C8372D;font-weight:600">ليست الإجابة الصحيحة. حاولي مرة أخرى أو اطلبي تلميحًا.</span>
+                </sc-if>
+                <sc-if value="{{ sp.showHint }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:14px;background:#F6E9D8;color:#5A3408;border-radius:8px;padding:10px 12px"><b>تلميح: </b>{{ sp.hint }}</div>
+                </sc-if>
+                <sc-if value="{{ sp.done }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:15px;background:#E3F3EB;color:#0F5A3E;border-radius:8px;padding:10px 12px;text-wrap:pretty"><b>{{ sp.doneTitle }} </b>{{ sp.why }}</div>
+                </sc-if>
+                <sc-if value="{{ sp.active }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <sc-if value="{{ sp.hasHint }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ sp.askHint }}" style="height:38px;padding:0 14px;border-radius:19px;border:1px solid #DAD8CF;background:#fff;font-size:13px;cursor:pointer;color:#14171C">أحتاج تلميحًا</button>
+                    </sc-if>
+                    <button onClick="{{ sp.reveal }}" style="height:38px;padding:0 14px;border-radius:19px;border:1px solid #DAD8CF;background:#fff;font-size:13px;cursor:pointer;color:#5B6270">اكشفي الخطوة</button>
+                  </div>
+                </sc-if>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{ ap.allDone }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#E3F3EB;border:1.5px solid #16825A;border-radius:12px;padding:clamp(16px,3.5vw,22px);display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+              <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:13px;font-weight:700;color:#16825A">الحل النهائي</span>
+                <span style="font-size:18px;font-weight:700;text-wrap:pretty">{{ ap.final }}</span>
+              </div>
+              <sc-if value="{{ ap.hasArt }}" hint-placeholder-val="{{ false }}">
+                <div style="position:relative;width:min(100%,340px);aspect-ratio:8/5;container-type:inline-size;border-radius:8px;background:#fff;overflow:hidden">
+                  <sc-for list="{{ ap.lwItems }}" as="it" hint-placeholder-count="0">
+                    <div style="position:absolute;left:{{ it.l }};top:{{ it.tp }};width:{{ it.w }};height:{{ it.h }};transform:translate(-50%,-50%) rotate({{ it.rot }});background:{{ it.bg }};border:{{ it.bd }};border-radius:{{ it.r }};opacity:{{ it.op }};z-index:{{ it.z }};color:{{ it.c }};font-size:{{ it.fs }};font-weight:{{ it.fw }};display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;white-space:nowrap;line-height:1;direction:ltr">{{ it.t }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+          <button onClick="{{ ap.reset }}" style="align-self:flex-start;background:none;border:0;padding:0;color:#2346D8;cursor:pointer;font-size:13px;font-weight:600">أعيدي المثال من البداية</button>
+        </div>
+      </sc-if>
+
+
+      <sc-if value="{{ tabCards }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:13px;color:#5B6270">اضغطي على البطاقة لقلبها.</span>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+            <sc-for list="{{ cur.cards }}" as="cd" hint-placeholder-count="2">
+              <button onClick="{{ cd.toggle }}" style="min-height:170px;border-radius:10px;border:1.5px solid {{ cd.bd }};background:{{ cd.bg }};color:{{ cd.color }};padding:16px;text-align:right;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;gap:12px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.75">{{ cd.side }}</span>
+                <span style="font-size:16px;font-weight:600;line-height:1.6;text-wrap:pretty">{{ cd.text }}</span>
+                <span style="font-size:12px;opacity:0.7">{{ cd.hint }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #DAD8CF;padding-top:16px">
+        <div style="display:flex;gap:8px">
+          <sc-if value="{{ hasPrevTab }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ prevTab }}" style="height:44px;padding:0 16px;border:1px solid #DAD8CF;border-radius:22px;background:#fff;font-size:14px;cursor:pointer;color:#14171C;white-space:nowrap" style-hover="border-color:#14171C">→ {{ prevTabLabel }}</button>
+          </sc-if>
+          <sc-if value="{{ hasNextTab }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ nextTab }}" style="height:44px;padding:0 16px;border:1px solid #DAD8CF;border-radius:22px;background:#fff;font-size:14px;cursor:pointer;color:#14171C;white-space:nowrap" style-hover="border-color:#14171C">{{ nextTabLabel }} ←</button>
+          </sc-if>
+        </div>
+        <button onClick="{{ startMini }}" style="height:48px;padding:0 24px;border:0;border-radius:24px;background:#2346D8;color:#fff;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#14171C">اختبري نفسك في هذا الهدف</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isQuiz }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:760px;margin:0 auto;padding:24px clamp(14px,4vw,28px) 80px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2346D8">{{ quizKicker }}</span>
+          <span style="font-size:15px;font-weight:600;text-wrap:pretty">{{ quizTitle }}</span>
+        </div>
+        <button onClick="{{ exitQuiz }}" style="flex:none;height:36px;padding:0 14px;border:1px solid #DAD8CF;border-radius:18px;background:#fff;font-size:13px;cursor:pointer;color:#14171C">إنهاء</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#5B6270">
+          <span>{{ qPos }}</span>
+          <span>صحيحة: <b style="font-family:'IBM Plex Mono',monospace;color:#16825A">{{ qCorrect }}</b></span>
+        </div>
+        <div style="height:6px;background:#E4E2DA;border-radius:3px;overflow:hidden"><div style="height:100%;width:{{ qProgW }};background:#14171C;transition:width .3s"></div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #DAD8CF;border-radius:12px;padding:clamp(18px,4vw,30px);display:flex;flex-direction:column;gap:18px">
+        <span style="align-self:flex-start;font-size:12px;font-weight:600;padding:3px 10px;border-radius:4px;background:#F3F2EC;color:#5B6270">{{ qType }}</span>
+        <p style="margin:0;font-size:clamp(18px,3.4vw,22px);font-weight:600;line-height:1.6;text-wrap:pretty">{{ qText }}</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px">
+          <sc-for list="{{ qOptions }}" as="op" hint-placeholder-count="4">
+            <button onClick="{{ op.pick }}" style="min-height:56px;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;border:1.5px solid {{ op.bd }};background:{{ op.bg }};color:#14171C;opacity:{{ op.op }};text-align:right;font-size:16px;cursor:pointer" style-hover="border-color:#14171C">
+              <span style="flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:{{ op.mBg }};color:{{ op.mColor }}">{{ op.mark }}</span>
+              <span style="text-wrap:pretty">{{ op.text }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ answered }}" hint-placeholder-val="{{ false }}">
+          <div style="border-radius:10px;padding:14px 16px;background:{{ fbBg }};display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+              <span style="font-size:16px;font-weight:700;color:{{ fbColor }}">{{ fbTitle }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:{{ fbColor }}">{{ fbPts }}</span>
+            </div>
+            <span style="font-size:15px;text-wrap:pretty">{{ fbWhy }}</span>
+          </div>
+        </sc-if>
+      </div>
+      <sc-if value="{{ answered }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ nextQ }}" style="align-self:flex-start;height:48px;padding:0 28px;border:0;border-radius:24px;background:#14171C;color:#fff;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#2346D8">{{ nextLabel }}</button>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:760px;margin:0 auto;padding:32px clamp(14px,4vw,28px) 80px;display:flex;flex-direction:column;gap:20px">
+      <div style="background:#fff;border:1px solid #DAD8CF;border-radius:12px;padding:clamp(20px,5vw,36px);display:flex;flex-direction:column;gap:14px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#2346D8">{{ rKicker }}</span>
+        <div style="display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:clamp(56px,12vw,88px);font-weight:600;line-height:0.9;color:{{ rColor }}">{{ rPct }}</span>
+          <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:4px">
+            <span style="font-size:18px;font-weight:700">{{ rMsg }}</span>
+            <span style="font-size:14px;color:#5B6270">{{ rSub }}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;border-top:1px solid #ECEAE3;padding-top:16px">
+          <sc-for list="{{ rRows }}" as="rr" hint-placeholder-count="3">
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) 110px 48px;gap:12px;align-items:center">
+              <span style="font-size:14px;text-wrap:pretty">{{ rr.label }}</span>
+              <span style="height:6px;background:#ECEAE3;border-radius:3px;overflow:hidden"><span style="display:block;height:100%;width:{{ rr.w }};background:{{ rr.color }}"></span></span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;text-align:left">{{ rr.pct }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{ hasNewBadges }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#14171C;color:#fff;border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:14px;font-weight:700">شارات جديدة</span>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <sc-for list="{{ newBadges }}" as="nb" hint-placeholder-count="1">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;border:1px solid #3A3F49;border-radius:8px">
+                <span style="width:40px;height:40px;border:1.5px solid #fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;direction:ltr">{{ nb.glyph }}</span>
+                <span style="font-size:14px;font-weight:600">{{ nb.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ retry }}" style="height:46px;padding:0 22px;border:0;border-radius:23px;background:#2346D8;color:#fff;font-size:14px;font-weight:700;cursor:pointer" style-hover="background:#14171C">أعيدي الاختبار</button>
+        <sc-if value="{{ isMiniResult }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ backToObj }}" style="height:46px;padding:0 20px;border:1px solid #DAD8CF;border-radius:23px;background:#fff;font-size:14px;cursor:pointer;color:#14171C" style-hover="border-color:#14171C">راجعي الهدف</button>
+        </sc-if>
+        <sc-if value="{{ hasNextObj }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ goNextObj }}" style="height:46px;padding:0 20px;border:1px solid #14171C;border-radius:23px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;color:#14171C">الهدف التالي ←</button>
+        </sc-if>
+        <button onClick="{{ goHome }}" style="height:46px;padding:0 20px;border:1px solid #DAD8CF;border-radius:23px;background:#fff;font-size:14px;cursor:pointer;color:#14171C" style-hover="border-color:#14171C">خريطة الأهداف</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isBadges }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:880px;margin:0 auto;padding:24px clamp(14px,4vw,28px) 80px;display:flex;flex-direction:column;gap:20px">
+      <button onClick="{{ goHome }}" style="align-self:flex-start;background:none;border:0;padding:0;color:#2346D8;cursor:pointer;font-size:13px;font-weight:600">→ خريطة الأهداف</button>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <h1 style="margin:0;font-size:30px;font-weight:700">الشارات والنقاط</h1>
+          <span style="font-size:14px;color:#5B6270">10 نقاط لكل إجابة صحيحة. الشارات تُفتح عند الإتقان.</span>
+        </div>
+        <div style="display:flex;gap:10px">
+          <div style="background:#fff;border:1px solid #DAD8CF;border-radius:10px;padding:10px 16px;display:flex;flex-direction:column">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;line-height:1.2">{{ points }}</span>
+            <span style="font-size:12px;color:#5B6270">نقطة</span>
+          </div>
+          <div style="background:#fff;border:1px solid #DAD8CF;border-radius:10px;padding:10px 16px;display:flex;flex-direction:column">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;line-height:1.2">{{ bestStreak }}</span>
+            <span style="font-size:12px;color:#5B6270">أطول سلسلة</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+        <sc-for list="{{ badges }}" as="bd" hint-placeholder-count="8">
+          <div style="background:#fff;border:1px solid #DAD8CF;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;opacity:{{ bd.op }}">
+            <span style="width:52px;height:52px;border:1.5px solid {{ bd.bd }};background:{{ bd.bg }};color:{{ bd.color }};border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:16px;direction:ltr">{{ bd.glyph }}</span>
+            <span style="font-size:15px;font-weight:700">{{ bd.name }}</span>
+            <span style="font-size:13px;color:#5B6270;text-wrap:pretty">{{ bd.desc }}</span>
+            <span style="font-size:12px;font-weight:600;color:{{ bd.stColor }}">{{ bd.st }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button onClick="{{ resetProgress }}" style="align-self:flex-start;background:none;border:0;padding:0;color:#C8372D;cursor:pointer;font-size:13px;text-decoration:underline">إعادة ضبط التقدم</button>
+    </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;passMark&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:80,&quot;min&quot;:50,&quot;max&quot;:100,&quot;step&quot;:5,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;الإتقان&quot;},&quot;finalPerObjective&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;الاختبار الشامل&quot;}}">
+const KEY = 'covalent-platform-progress-v1';
+const LETTERS = ['أ', 'ب', 'ج', 'د'];
+const TABS = [['learn', 'أتعلّم'], ['explore', 'أستكشف'], ['apply', 'أطبّق'], ['cards', 'بطاقات المراجعة']];
+const OK = '#16825A', OK_SOFT = '#E3F3EB', BAD = '#C8372D', BAD_SOFT = '#FBE7E4', ACC = '#2346D8', ACC_SOFT = '#E6EBFC', INK = '#14171C', MUTED = '#5B6270', LINE = '#DAD8CF';
+const KIND = { def: 'مفهوم', flow: 'خطوات', table: 'جدول', compare: 'مقارنة', note: 'لاحظي', chips: 'أمثلة', points: 'نقاط' };
+const EMPTY = () => ({ mastery: {}, points: 0, badges: [], streak: 0, bestStreak: 0, finalBest: 0, quizzes: 0 });
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function loadProg() { try { return Object.assign(EMPTY(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { return EMPTY(); } }
+const noop = () => {};
+
+class Component extends DCLogic {
+  state = { data: null, explore: null, view: 'home', si: 0, oi: 0, tab: 'learn', flipped: {}, ex: {}, ap: { picks: {}, revealed: {}, hints: {} }, quiz: null, result: null, prog: loadProg() };
+
+  componentDidMount() {
+    const u = f => new URL(f, document.baseURI).href;
+    Promise.all([import(u('covalent-content-v2.js')), import(u('covalent-explore.js'))]).then(([c, e]) => this.setState({ data: c.SECTIONS, explore: e.EXPLORE, lewis: e.LEWIS }));
+  }
+  componentDidUpdate() { this.loop(); }
+  componentWillUnmount() { clearTimeout(this._loop); this._spec = null; }
+  loop() {
+    if (this._loop || !(this._spec && this._spec.tick)) return;
+    this._loop = setTimeout(() => { this._loop = null; const f = this._spec && this._spec.tick; if (f) f(); }, 40);
+  }
+  pass() { return this.props.passMark ?? 80; }
+  tabsList() { return TABS; }
+  top() { try { window.scrollTo(0, 0); } catch (e) {} }
+  save(prog) { try { localStorage.setItem(KEY, JSON.stringify(prog)); } catch (e) {} }
+  flat() { const out = []; let n = 0; (this.state.data || []).forEach((s, si) => s.objectives.forEach((o, oi) => out.push({ o, s, si, oi, n: ++n }))); return out; }
+  badgeDefs() {
+    const d = [{ id: 'first', glyph: 'H', name: 'أول تجربة', desc: 'أكملي أول اختبار.' }];
+    (this.state.data || []).forEach(s => d.push({ id: 'sec-' + s.id, glyph: s.id, name: 'إتقان ' + s.title, desc: 'أتقني جميع أهداف القسم ' + s.id + '.' }));
+    d.push({ id: 'streak', glyph: '5×', name: 'سلسلة صحيحة', desc: '5 إجابات صحيحة متتالية.' });
+    d.push({ id: 'final', glyph: 'Σ', name: 'الاختبار الشامل', desc: 'اجتازي الاختبار الشامل بنسبة الإتقان المطلوبة.' });
+    d.push({ id: 'all', glyph: 'Au', name: 'إتقان كامل', desc: 'أتقني جميع الأهداف.' });
+    return d;
+  }
+  earned(prog) {
+    const p = this.pass(), data = this.state.data || [], ids = [], m = o => (prog.mastery[o.id] ?? -1) >= p;
+    if (prog.quizzes > 0) ids.push('first');
+    data.forEach(s => { if (s.objectives.every(m)) ids.push('sec-' + s.id); });
+    if (prog.bestStreak >= 5) ids.push('streak');
+    if (prog.finalBest >= p) ids.push('final');
+    if (data.length && data.every(s => s.objectives.every(m))) ids.push('all');
+    return ids;
+  }
+  openObj(si, oi) { this.setState({ view: 'learn', si, oi, tab: 'learn', flipped: {}, ex: {}, ap: { picks: {}, revealed: {}, hints: {} } }); this.top(); }
+  startMini() {
+    const o = this.state.data[this.state.si].objectives[this.state.oi];
+    const items = shuffle(o.quiz).map(q => Object.assign({}, q, { objId: o.id }));
+    this.setState({ view: 'quiz', quiz: { mode: 'mini', items, idx: 0, picked: null, answers: [], pts: 0 } }); this.top();
+  }
+  startFinal() {
+    if (!this.state.data) return;
+    const per = Math.max(1, Math.min(3, this.props.finalPerObjective ?? 1)), items = [];
+    this.state.data.forEach(s => s.objectives.forEach(o => shuffle(o.quiz).slice(0, per).forEach(q => items.push(Object.assign({}, q, { objId: o.id })))));
+    this.setState({ view: 'quiz', quiz: { mode: 'final', items: shuffle(items), idx: 0, picked: null, answers: [], pts: 0 } }); this.top();
+  }
+  pick(i) {
+    const q = this.state.quiz; if (!q || q.picked !== null) return;
+    const it = q.items[q.idx], ok = i === it.a, prog = Object.assign({}, this.state.prog);
+    prog.points += ok ? 10 : 0; prog.streak = ok ? prog.streak + 1 : 0; prog.bestStreak = Math.max(prog.bestStreak, prog.streak);
+    this.save(prog);
+    this.setState({ prog, quiz: Object.assign({}, q, { picked: i, answers: q.answers.concat([{ objId: it.objId, ok }]), pts: q.pts + (ok ? 10 : 0) }) });
+  }
+  nextQ() {
+    const q = this.state.quiz;
+    if (q.idx + 1 < q.items.length) { this.setState({ quiz: Object.assign({}, q, { idx: q.idx + 1, picked: null }) }); this.top(); return; }
+    this.finish();
+  }
+  finish() {
+    const q = this.state.quiz, prog = Object.assign({}, this.state.prog, { mastery: Object.assign({}, this.state.prog.mastery) }), by = {};
+    q.answers.forEach(a => { by[a.objId] = by[a.objId] || { c: 0, t: 0 }; by[a.objId].t++; if (a.ok) by[a.objId].c++; });
+    Object.keys(by).forEach(k => { prog.mastery[k] = Math.max(prog.mastery[k] ?? 0, Math.round(by[k].c / by[k].t * 100)); });
+    const correct = q.answers.filter(a => a.ok).length, total = q.items.length, pct = total ? Math.round(correct / total * 100) : 0;
+    prog.quizzes = (prog.quizzes || 0) + 1;
+    if (q.mode === 'final') prog.finalBest = Math.max(prog.finalBest || 0, pct);
+    const before = prog.badges || [], now = this.earned(prog), fresh = now.filter(id => before.indexOf(id) < 0);
+    prog.badges = now; this.save(prog);
+    this.setState({ prog, view: 'result', result: { mode: q.mode, correct, total, pct, pts: q.pts, by, fresh } }); this.top();
+  }
+  setEx(patch) { this.setState(p => ({ ex: Object.assign({}, p.ex, patch) })); }
+  setAp(key, i, v) { this.setState(p => ({ ap: Object.assign({}, p.ap, { [key]: Object.assign({}, p.ap[key], { [i]: v }) }) })); }
+
+  buildBlocks(o) {
+    return (o.blocks || []).map((b, i) => {
+      const r = { idx: String(i + 1).padStart(2, '0'), kind: KIND[b.t] || '', isDef: b.t === 'def', isFlow: b.t === 'flow', isTable: b.t === 'table', isCompare: b.t === 'compare', isNote: b.t === 'note', isChips: b.t === 'chips', isPoints: b.t === 'points', title: b.title || '', term: b.term || '', text: b.text || '' };
+      if (b.t === 'flow') r.steps = b.steps.map((t, k) => { const last = k === b.steps.length - 1; return { n: String(k + 1).padStart(2, '0'), text: t, bg: last ? INK : '#fff', c: last ? '#fff' : INK, bd: last ? INK : LINE }; });
+      if (b.t === 'table') { const cols = b.head.length; r.cols = 'repeat(' + cols + ', minmax(0,1fr))'; r.minW = (cols * 112) + 'px'; r.head = b.head.map(v => ({ v })); r.cells = []; b.rows.forEach((row, ri) => row.forEach((v, ci) => r.cells.push({ v, bg: ri % 2 ? '#FAFAF7' : '#fff', w: ci === 0 ? 600 : 400, dir: /[\u0600-\u06FF]/.test(v) ? 'rtl' : 'ltr' }))); }
+      if (b.t === 'compare') { r.aTitle = b.a.title; r.bTitle = b.b.title; r.aItems = b.a.items.map(v => ({ v })); r.bItems = b.b.items.map(v => ({ v })); }
+      if (b.t === 'chips') r.items = b.items.map(c => ({ f: c.f, cap: c.cap || '' }));
+      if (b.t === 'points') r.items = b.items.map(v => ({ v }));
+      return r;
+    });
+  }
+  buildExplore(o) {
+    const fn = this.state.explore && this.state.explore[o.id];
+    if (!fn) { this._spec = null; return { title: '', prompt: '', groups: [], items: [], readouts: [], insText: '', insBg: '#fff', insC: INK, pDown: noop, pMove: noop, pUp: noop, touch: 'auto', cursor: 'default' }; }
+    const s = fn(this.state.ex, p => this.setEx(p));
+    this._spec = s;
+    const tone = (s.insight && s.insight.tone) || 'info';
+    const TONE = { info: [ACC_SOFT, '#1A3299'], ok: [OK_SOFT, '#0F5A3E'], bad: [BAD_SOFT, '#8E2119'] }[tone];
+    return {
+      title: s.title, prompt: s.prompt,
+      groups: (s.groups || []).map(g => ({ label: g.label, opts: g.opts.map(x => ({ label: x.label, go: x.go, bg: x.active ? INK : '#fff', c: x.active ? '#fff' : INK, bd: x.active ? INK : LINE })) })),
+      items: s.items || [],
+      hasSlider: !!s.slider, slider: s.slider || { label: '', min: 0, max: 1, step: 1, value: 0, change: noop, valueLabel: '' },
+      hasQuestion: !!s.question, question: s.question || { ask: '', opts: [] },
+      hasActions: !!(s.actions && s.actions.length), actions: (s.actions || []).map(a => ({ label: a.label, go: a.go, bg: a.primary ? ACC : '#fff', c: a.primary ? '#fff' : INK, bd: a.primary ? ACC : LINE })),
+      hasLegend: !!(s.legend && s.legend.length), legend: s.legend || [],
+      readouts: (s.readouts || []).map(r => ({ k: r.k, v: r.v, c: r.c || INK, dir: /[\u0600-\u06FF]/.test(String(r.v)) ? 'rtl' : 'ltr' })),
+      insText: s.insight ? s.insight.text : '', insBg: TONE[0], insC: TONE[1],
+      pDown: s.drag ? s.drag.down : noop, pMove: s.drag ? s.drag.move : noop, pUp: s.drag ? s.drag.up : noop,
+      touch: s.drag ? 'none' : 'auto', cursor: s.drag ? 'grab' : 'default'
+    };
+  }
+  buildApply(o) {
+    const e = o.ex2, ap = this.state.ap;
+    if (!e) return { src: '', q: '', steps: [], allDone: false, hasArt: false, art: '', final: '', reset: noop };
+    const isDone = i => !!ap.revealed[i] || ap.picks[i] === e.steps[i].a;
+    let firstOpen = e.steps.findIndex((s, i) => !isDone(i)); if (firstOpen < 0) firstOpen = e.steps.length;
+    const steps = e.steps.map((s, i) => {
+      const done = isDone(i), active = i === firstOpen, locked = i > firstOpen, pk = ap.picks[i];
+      const wrong = active && pk != null && pk !== s.a;
+      return {
+        label: 'الخطوة ' + (i + 1) + ' من ' + e.steps.length + (locked ? ' · تُفتح بعد الخطوة السابقة' : ''),
+        mark: done ? '✓' : String(i + 1), nBg: done ? OK : active ? INK : '#ECEAE3', nC: done || active ? '#fff' : MUTED,
+        bd: active ? INK : done ? '#BFE0CF' : LINE, op: locked ? 0.5 : 1, open: !locked, active, done,
+        ask: s.ask, hint: s.hint || '', hasHint: !!s.hint, showHint: !done && !!ap.hints[i] && !!s.hint, showWrong: wrong,
+        why: s.why, doneTitle: ap.picks[i] === s.a ? 'أحسنتِ!' : 'الإجابة: ' + s.o[s.a] + ' —',
+        askHint: () => this.setAp('hints', i, true), reveal: () => this.setAp('revealed', i, true),
+        opts: s.o.map((t, k) => {
+          let bg = '#fff', bd = LINE, op = 1;
+          if (done) { if (k === s.a) { bg = OK_SOFT; bd = OK; } else op = 0.45; }
+          else if (wrong && k === pk) { bg = BAD_SOFT; bd = BAD; }
+          return { label: t, bg, bd, op, go: done ? noop : () => this.setAp('picks', i, k) };
+        })
+      };
+    });
+    return { src: e.src || '', q: e.q, steps, allDone: firstOpen >= e.steps.length, final: e.final || '', hasArt: !!(e.lw && this.state.lewis && this.state.lewis[e.lw]), lwItems: (e.lw && this.state.lewis && this.state.lewis[e.lw]) ? this.state.lewis[e.lw]() : [], reset: () => this.setState({ ap: { picks: {}, revealed: {}, hints: {} } }) };
+  }
+
+  renderVals() {
+    const st = this.state, data = st.data, prog = st.prog, pass = this.pass();
+    const goHome = () => { this.setState({ view: 'home' }); this.top(); };
+    const base = {
+      loading: !data, goHome, points: prog.points, badgeCount: (prog.badges || []).length, bestStreak: prog.bestStreak,
+      openBadges: () => { this.setState({ view: 'badges' }); this.top(); }, startFinal: () => this.startFinal(),
+      isHome: !!data && st.view === 'home', isLearn: !!data && st.view === 'learn', isQuiz: !!data && st.view === 'quiz', isResult: !!data && st.view === 'result', isBadges: !!data && st.view === 'badges'
+    };
+    if (!data) { this._spec = null; return base; }
+    const flat = this.flat(), total = flat.length, mOf = id => prog.mastery[id];
+    const per = Math.max(1, Math.min(3, this.props.finalPerObjective ?? 1));
+    const overall = Math.round(flat.reduce((a, f) => a + (mOf(f.o.id) || 0), 0) / total);
+    const mastered = flat.filter(f => (mOf(f.o.id) ?? -1) >= pass).length;
+    const status = v => v == null ? ['لم يبدأ', MUTED, LINE] : v >= pass ? ['متقن', OK, OK] : ['قيد التعلّم — أعيدي الاختبار', ACC, ACC];
+    const secs = data.map((s, si) => ({
+      id: s.id, title: s.title, en: s.en, idea: s.idea, count: s.objectives.length + ' أهداف',
+      pctLabel: Math.round(s.objectives.reduce((a, o) => a + (mOf(o.id) || 0), 0) / s.objectives.length) + '%',
+      objs: s.objectives.map((o, oi) => { const v = mOf(o.id), f = flat.find(x => x.o.id === o.id), sv = status(v); return { n: f.n, text: o.text, pctW: (v || 0) + '%', pctLabel: v == null ? '—' : v + '%', status: sv[0], statusColor: sv[1], barColor: sv[2], open: () => this.openObj(si, oi) }; })
+    }));
+    const vals = Object.assign(base, {
+      overallLabel: overall + '%', overallW: overall + '%', masteredLabel: mastered + ' / ' + total, passLabel: pass + '%', secs,
+      finalDesc: (total * per) + ' سؤالًا من جميع الأهداف بترتيب عشوائي، مع تغذية راجعة فورية بعد كل سؤال. نسبة الاجتياز ' + pass + '%.'
+    });
+
+    const s = data[st.si], o = s.objectives[st.oi], fo = flat.find(x => x.o.id === o.id);
+    const tl = this.tabsList(), ti = Math.max(0, tl.findIndex(t => t[0] === st.tab)), tab = tl[ti][0];
+    const mv = mOf(o.id);
+    vals.cur = {
+      secId: s.id, secTitle: s.title, n: fo.n, text: o.text, posLabel: 'الهدف ' + fo.n + ' من ' + total,
+      masteryLabel: mv == null ? 'لم تختبري نفسك بعد' : 'إتقانكِ ' + mv + '%',
+      chipBg: mv == null ? '#ECEAE3' : mv >= pass ? OK_SOFT : ACC_SOFT, chipColor: mv == null ? MUTED : mv >= pass ? OK : ACC,
+      blocks: this.buildBlocks(o),
+      cards: o.cards.map((c, i) => { const back = !!st.flipped[i]; return { text: back ? c.b : c.f, side: (back ? 'الإجابة · ' : 'سؤال · ') + (i + 1) + '/' + o.cards.length, hint: back ? 'اضغطي للعودة إلى السؤال' : 'اضغطي لإظهار الإجابة', bg: back ? INK : '#fff', color: back ? '#fff' : INK, bd: back ? INK : LINE, toggle: () => this.setState(p => ({ flipped: Object.assign({}, p.flipped, { [i]: !p.flipped[i] }) })) }; })
+    };
+    vals.tabs = tl.map((t, i) => ({ n: i + 1, label: t[1], bd: t[0] === tab ? INK : 'transparent', color: t[0] === tab ? INK : MUTED, go: () => this.setState({ tab: t[0] }) }));
+    vals.tabLearn = tab === 'learn'; vals.tabExplore = tab === 'explore'; vals.tabApply = tab === 'apply'; vals.tabCards = tab === 'cards';
+    if (st.view === 'learn' && tab === 'explore') vals.ex = this.buildExplore(o); else { this._spec = null; vals.ex = { groups: [], items: [], readouts: [], pDown: noop, pMove: noop, pUp: noop }; }
+    vals.ap = this.buildApply(o);
+    vals.hasPrevTab = ti > 0; vals.hasNextTab = ti < tl.length - 1;
+    vals.prevTabLabel = ti > 0 ? tl[ti - 1][1] : ''; vals.nextTabLabel = ti < tl.length - 1 ? tl[ti + 1][1] : '';
+    vals.prevTab = () => { if (ti > 0) { this.setState({ tab: tl[ti - 1][0] }); this.top(); } };
+    vals.nextTab = () => { if (ti < tl.length - 1) { this.setState({ tab: tl[ti + 1][0] }); this.top(); } };
+    vals.startMini = () => this.startMini();
+
+    const q = st.quiz;
+    if (q) {
+      const it = q.items[q.idx], answered = q.picked !== null, ok = answered && q.picked === it.a, opts = it.t === 'tf' ? ['صح', 'خطأ'] : it.o, itObj = flat.find(x => x.o.id === it.objId);
+      vals.quizKicker = q.mode === 'final' ? 'الاختبار الشامل' : 'اختبري نفسك · الهدف ' + fo.n;
+      vals.quizTitle = q.mode === 'final' ? 'الهدف ' + itObj.n + ': ' + itObj.o.text : o.text;
+      vals.qPos = 'السؤال ' + (q.idx + 1) + ' من ' + q.items.length;
+      vals.qCorrect = q.answers.filter(a => a.ok).length;
+      vals.qProgW = Math.round((q.idx + (answered ? 1 : 0)) / q.items.length * 100) + '%';
+      vals.qType = it.t === 'tf' ? 'صح أو خطأ' : 'اختيار من متعدد';
+      vals.qText = it.q;
+      vals.qOptions = opts.map((t, i) => {
+        let bg = '#fff', bd = LINE, mBg = '#F3F2EC', mColor = INK, mark = LETTERS[i], op = 1;
+        if (answered) { if (i === it.a) { bg = OK_SOFT; bd = OK; mBg = OK; mColor = '#fff'; mark = '✓'; } else if (i === q.picked) { bg = BAD_SOFT; bd = BAD; mBg = BAD; mColor = '#fff'; mark = '✕'; } else op = 0.5; }
+        return { text: t, bg, bd, mBg, mColor, mark, op, pick: () => this.pick(i) };
+      });
+      vals.answered = answered;
+      vals.fbTitle = ok ? 'إجابة صحيحة' : 'إجابة غير صحيحة'; vals.fbPts = ok ? '+10 نقاط' : '';
+      vals.fbColor = ok ? OK : BAD; vals.fbBg = ok ? OK_SOFT : BAD_SOFT; vals.fbWhy = it.why;
+      vals.nextQ = () => this.nextQ(); vals.nextLabel = q.idx + 1 < q.items.length ? 'السؤال التالي' : 'عرض النتيجة';
+      vals.exitQuiz = () => { this.setState({ view: q.mode === 'final' ? 'home' : 'learn', quiz: null }); this.top(); };
+    }
+    const r = st.result;
+    if (r) {
+      const passed = r.pct >= pass;
+      vals.rKicker = r.mode === 'final' ? 'نتيجة الاختبار الشامل' : 'نتيجة اختبار الهدف ' + fo.n;
+      vals.rPct = r.pct + '%'; vals.rColor = passed ? OK : BAD;
+      vals.rMsg = passed ? (r.mode === 'final' ? 'اجتزتِ الاختبار الشامل' : 'أتقنتِ هذا الهدف') : 'تحتاجين إلى مراجعة';
+      vals.rSub = r.correct + ' إجابات صحيحة من ' + r.total + ' · +' + r.pts + ' نقطة';
+      vals.rRows = r.mode === 'final' ? data.map(sx => { let c = 0, t = 0; sx.objectives.forEach(ox => { const b = r.by[ox.id]; if (b) { c += b.c; t += b.t; } }); const p = t ? Math.round(c / t * 100) : 0; return { label: sx.id + ' ' + sx.title, pct: p + '%', w: p + '%', color: p >= pass ? OK : BAD }; })
+        : [{ label: o.text, pct: r.pct + '%', w: r.pct + '%', color: passed ? OK : BAD }];
+      const defs = this.badgeDefs();
+      vals.newBadges = r.fresh.map(id => defs.find(d => d.id === id)).filter(Boolean); vals.hasNewBadges = vals.newBadges.length > 0;
+      vals.isMiniResult = r.mode === 'mini';
+      const nxt = flat[fo.n];
+      vals.hasNextObj = r.mode === 'mini' && passed && !!nxt;
+      vals.goNextObj = () => nxt && this.openObj(nxt.si, nxt.oi);
+      vals.backToObj = () => { this.setState({ view: 'learn', tab: 'learn' }); this.top(); };
+      vals.retry = () => r.mode === 'final' ? this.startFinal() : this.startMini();
+    }
+    const got = prog.badges || [];
+    vals.badges = this.badgeDefs().map(d => { const e = got.indexOf(d.id) >= 0; return Object.assign({}, d, { op: e ? 1 : 0.55, bg: e ? INK : '#fff', color: e ? '#fff' : MUTED, bd: e ? INK : LINE, st: e ? 'مكتسبة' : 'لم تُكتسب بعد', stColor: e ? OK : MUTED }); });
+    vals.resetProgress = () => { if (window.confirm('هل تريدين حذف كل التقدم والنقاط والشارات؟')) { const p = EMPTY(); this.save(p); this.setState({ prog: p }); } };
+    return vals;
+  }
+}
+</script>
+</body>
+</html>
